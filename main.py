@@ -18,8 +18,6 @@ from PIL import ImageDraw, Image, ImageFont, ImageFilter
 
 from colorthief import ColorThief
 
-from IPython.display import display
-
 import textwrap
 
 st.set_page_config(
