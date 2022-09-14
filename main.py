@@ -1,4 +1,3 @@
-from io import BytesIO
 import streamlit as st
 
 from rake_nltk import Rake
@@ -15,6 +14,9 @@ from PIL import ImageDraw, Image, ImageFont, ImageFilter
 from colorthief import ColorThief
 
 import textwrap
+
+import nltk
+nltk.download('all')
 
 st.set_page_config(
     page_title= 'enrico.',
