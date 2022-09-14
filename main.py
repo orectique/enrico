@@ -75,13 +75,21 @@ def imageProcess(query, content):
     img = Image.new('RGB', (1500, 2100), color = light_color)
 
     b, h = place.size
+    h = int(1400*h/b)
 
-    place = place.resize((1400, int(1400*h/b)))
+    place = place.resize((1400, h))
 
-    try:
+    if h >= 1355:
         place = place.crop((0, 0, 1400, 1355))
-    except:
-        pass
+    else:
+        b, h = place.size
+        b = int(1355*b/h)
+        place = place.resize((b, 1355))
+
+        s = (b - 1400)/2
+
+        place = place.crop((s, 0, b - s, 1355))
+
     img.paste(place, (50, 50))
 
     draw = ImageDraw.Draw(img)
