@@ -28,7 +28,7 @@ st.set_page_config(
     layout= 'centered'
 )
 
-def keywords(content):
+def keywords(content, keyword):
     r = Rake()
 
     r.extract_keywords_from_text(content)
@@ -39,8 +39,8 @@ def keywords(content):
     for key in keys:
         strOut += ', ' + key.lower()
 
-    if 'goodnight' not in strOut:
-        strOut += ', goodnight'
+    if keyword not in strOut:
+        strOut += ', ' + keyword.lower()
     
     return strOut
 
@@ -108,9 +108,9 @@ def imageProcess(query, content):
 
     return img
 
-def enrico(content): 
+def enrico(content, keyword): 
     
-    query = keywords(content)
+    query = keywords(content, keyword)
     
     img = imageProcess(query, content)
 
@@ -122,22 +122,24 @@ st.title('enrico.')
 
 filename = st.text_input('file you call what?', 'enricoImage')
 
+keyword = st.text_input('keyword is what?', 'goodnight')
+
 content = st.text_area('what to say? ', value = "It's enough for me to be sure that you and I exist at this moment.", placeholder = "It's enough for me to be sure that you and I exist at this moment.", max_chars = 450)
 
 if st.button('process'):
-    #try:
-    out = enrico(content)
-    st.image(out)   
-    buf = BytesIO()
-    out.save(buf, format="PNG")
-    byte_im = buf.getvalue()
+    try:
+        out = enrico(content, keyword)
+        st.image(out)   
+        buf = BytesIO()
+        out.save(buf, format="PNG")
+        byte_im = buf.getvalue()
 
-    btn = st.download_button(
-    label="Download Image",
-    data=byte_im,
-    file_name=f"{filename}.png",
-    mime="image/jpeg",
-    )
-    st.success('success!')
-    #except:
-        #st.error('something went wrong. orectique was too lazy to implement error handling. sucks to be you.')
+        btn = st.download_button(
+        label="Download Image",
+        data=byte_im,
+        file_name=f"{filename}.png",
+        mime="image/jpeg",
+        )
+        st.success('success!')
+    except:
+        st.error('something went wrong. orectique was too lazy to implement error handling. sucks to be you.')
