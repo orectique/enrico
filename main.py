@@ -40,7 +40,7 @@ def keywords(content, keyword):
     
     return strOut
 
-def imageProcess(query, content):
+def imageProcess(query, content, keyword):
     pu = pyunsplash.PyUnsplash(api_key=os.getenv('U_KEY'))
 
     search = pu.search(type_='photos', page = 1, per_page = 1, query=query)
@@ -89,7 +89,8 @@ def imageProcess(query, content):
     img.paste(place, (50, 50))
 
     draw = ImageDraw.Draw(img)
-    font = ImageFont.truetype('./Assets/PlayfairDisplay-Italic-VariableFont_wght.ttf', 50)  
+    font2 = ImageFont.truetype('../Assets/PlayfairDisplay-Italic-VariableFont_wght.ttf', 50) 
+    font1 = ImageFont.truetype('../Assets/PlayfairDisplay-Italic-VariableFont_wght.ttf', 100) 
 
     wrapper = textwrap.TextWrapper(width=50) 
     word_list = wrapper.wrap(text=content) 
@@ -98,10 +99,12 @@ def imageProcess(query, content):
         caption_new = caption_new + ii + '\n'
     caption_new += word_list[-1]
 
-    textWidth, _ = draw.textsize(caption_new, font = font)
+    textWidth, textHeight = draw.textsize(caption_new, font = font2)
+    capWidth, _ = draw.textsize(keyword, font = font1)
 
-    draw.text(xy = ((1500 - textWidth)/2, 1455), text = caption_new, font = font, fill = dark_color)
-
+    draw.text(xy = ((1500 - textWidth)/2, 1540), text = caption_new, font = font2, fill = dark_color)
+    draw.text(xy = ((1500 - capWidth)/2, 1405), text = keyword, font = font1, fill = dark_color)
+    
     return img
 
 def enrico(content, keyword): 
