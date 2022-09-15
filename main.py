@@ -111,7 +111,7 @@ def enrico(content, keyword):
     
     query = keywords(content, keyword)
     
-    img = imageProcess(query, content)
+    img = imageProcess(query, content, keyword)
 
     return img
 
