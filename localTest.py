@@ -127,9 +127,6 @@ def imageProcess(response, colIndex):
     
     with columns[colIndex]:
         st.image(img, use_column_width=True)
-
-    imgs.append(img)
-
     return 
     
 st.title('enrico.')
@@ -145,23 +142,6 @@ buf = BytesIO()
 if st.button('process'):
     #try:
     imageGet(keywords()) 
-
-    imgs = []
-
-    i = 0
-
-    for img in imgs:
-        img.save(buf, format="PNG")
-        byte_im = buf.getvalue()
-
-        btn = st.download_button(
-        label="Download Image",
-        data=byte_im,
-        file_name=f"{filename + str(i)}.png",
-        mime="image/jpeg",
-        )
-
-        i += 1
 
     #except:
         #st.error('something went wrong. orectique was too lazy to implement error handling. sucks to be you.')
