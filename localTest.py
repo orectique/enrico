@@ -16,6 +16,8 @@ import os
 
 from PIL import ImageDraw, Image, ImageFont
 
+from colorsys import rgb_to_hsv, hsv_to_rgb
+
 from colorthief import ColorThief
 
 import textwrap
@@ -27,6 +29,10 @@ st.set_page_config(
 )
 
 columns = st.columns(4)
+
+def complementary(r, g, b):
+   hsv = rgb_to_hsv(r, g, b)
+   return hsv_to_rgb((hsv[0] + 0.5) % 1, hsv[1], hsv[2])
 
 def keywords():
     r = Rake()
@@ -69,15 +75,15 @@ def imageProcess(response, colIndex):
     colors = ct.get_palette(color_count=6)
 
     light = 0
-    dark = float('inf')
+    dark = 769
 
     for i in colors:
-        if sum(i) < dark:
-            dark = sum(i)
-            dark_color = i
         if sum(i) > light:
             light = sum(i)
             light_color = i
+        if sum(i) < dark:
+            dark = sum(i)
+            dark_color = i
 
     os.remove('placeholder.jpg')
 
@@ -113,7 +119,7 @@ def imageProcess(response, colIndex):
         caption_new = caption_new + ii + '\n'
     caption_new += word_list[-1]
 
-    textWidth, textHeight = draw.textsize(caption_new, font = font2)
+    textWidth, _ = draw.textsize(caption_new, font = font2)
     capWidth, _ = draw.textsize(keyword, font = font1)
 
     draw.text(xy = ((1500 - textWidth)/2, 1540), text = caption_new, font = font2, fill = dark_color)
@@ -135,30 +141,27 @@ keyword = st.text_input('keyword is what?', 'goodnight')
 content = st.text_area('what to say? ', value = "It's enough for me to be sure that you and I exist at this moment.", placeholder = "It's enough for me to be sure that you and I exist at this moment.", max_chars = 350)
 buf = BytesIO()
 
+
 if st.button('process'):
-    try:
-        query = keywords()
+    #try:
+    imageGet(keywords()) 
 
-        imgs = []
-        
-        imageGet(query)
+    imgs = []
 
-        opts = ['left left', 'left', 'right', 'right right']
+    i = 0
 
-        picSelect = st.selectbox('select image', opts)
-
-        loc = opts.index(picSelect)
-        img = imgs[loc]
-
+    for img in imgs:
         img.save(buf, format="PNG")
         byte_im = buf.getvalue()
 
         btn = st.download_button(
         label="Download Image",
         data=byte_im,
-        file_name=f"{filename + str(loc)}.png",
+        file_name=f"{filename + str(i)}.png",
         mime="image/jpeg",
         )
 
-    except:
-        st.error('something went wrong. orectique was too lazy to implement error handling. sucks to be you.')
+        i += 1
+
+    #except:
+        #st.error('something went wrong. orectique was too lazy to implement error handling. sucks to be you.')
